@@ -38,6 +38,21 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
+
+a2 = sigmoid([ones(m,1) X] * Theta1');
+a3 = sigmoid([ones(m,1) a2] * Theta2');
+hyp = a3;
+for k = 1:num_labels
+    kth_label = (y==k);
+    kth_hyp = hyp(:,k);
+    J -= 1/m * (kth_label' * log(kth_hyp) + (1-kth_label)' * log(1-kth_hyp));
+endfor
+
+shaved_theta1 = Theta1(:,2:end);
+shaved_theta2 = Theta2(:,2:end);
+shaved_theta = [shaved_theta1(:); shaved_theta2(:)];
+J += lambda/2/m * sum(shaved_theta .* shaved_theta);
+
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
