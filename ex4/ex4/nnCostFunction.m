@@ -1,4 +1,3 @@
-
 function [J grad] = nnCostFunction(nn_params, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
@@ -82,16 +81,17 @@ for t = 1:m
     z3 = Theta2 * a2;
     a3 = sigmoid(z3);
 
-    yk = (1:num_labels)' ==y(t);
+    yk = (1:num_labels)' == y(t);
+
     delta3 = a3 - yk;
-    delta2 = Theta2(:,2,end)' * delta3 .* sigmoidGradient(z2);
+        delta2 = Theta2(:,2:end)' * delta3 .* sigmoidGradient(z2);
 
     Theta1_grad += delta2 * a1';
     Theta2_grad += delta3 * a2';
 endfor
 
-Theta1_grad /= m;
-Theta2_grad /= m;
+Theta1_grad = Theta1_grad/m + lambda/m * [zeros(hidden_layer_size, 1) Theta1(:,2:end)];
+Theta2_grad = Theta2_grad/m + lambda/m * [zeros(num_labels, 1) Theta2(:,2:end)];
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -100,21 +100,6 @@ Theta2_grad /= m;
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
