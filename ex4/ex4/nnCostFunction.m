@@ -1,3 +1,4 @@
+
 function [J grad] = nnCostFunction(nn_params, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
@@ -39,8 +40,12 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 
-a2 = sigmoid([ones(m,1) X] * Theta1');
-a3 = sigmoid([ones(m,1) a2] * Theta2');
+a1 = X;
+z2 = [ones(m,1) X] * Theta1';
+a2 = sigmoid(z2);
+z3 = [ones(m,1) a2] * Theta2';
+a3 = sigmoid(z3);
+
 hyp = a3;
 for k = 1:num_labels
     kth_label = (y==k);
@@ -69,6 +74,25 @@ J += lambda/2/m * sum(shaved_theta .* shaved_theta);
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+for t = 1:m
+    a1 = [1; X(t,:)'];
+    z2 = Theta1 * a1;
+    a2 = [1; sigmoid(z2)];
+    z3 = Theta2 * a2;
+    a3 = sigmoid(z3);
+
+    yk = (1:num_labels)' ==y(t);
+    delta3 = a3 - yk;
+    delta2 = Theta2(:,2,end)' * delta3 .* sigmoidGradient(z2);
+
+    Theta1_grad += delta2 * a1';
+    Theta2_grad += delta3 * a2';
+endfor
+
+Theta1_grad /= m;
+Theta2_grad /= m;
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -101,6 +125,4 @@ J += lambda/2/m * sum(shaved_theta .* shaved_theta);
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
-
 end
