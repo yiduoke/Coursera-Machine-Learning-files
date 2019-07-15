@@ -19,7 +19,12 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+shaved_theta = theta(2:size(theta));
+hyp = X*theta;
+J = (1/2/m) * sum((hyp-y) .^ 2) + (lambda/2/m) * sum(shaved_theta .* shaved_theta);
 
+theta(1) = 0;
+grad = (1/m) * X' * (hyp - y) + (lambda/m) * theta;
 
 
 
