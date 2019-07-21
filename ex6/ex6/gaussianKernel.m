@@ -16,7 +16,11 @@ sim = 0;
 %
 %
 
+step1 = x1 - x2;
+step2 = step1 .^2;
+step3 = sum(step2);
 
+sim = exp(-step3/2/(sigma^2));
 
 
 
