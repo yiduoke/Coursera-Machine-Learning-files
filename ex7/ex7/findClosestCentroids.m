@@ -20,9 +20,20 @@ idx = zeros(size(X,1), 1);
 %
 % Note: You can use a for-loop over the examples to compute this.
 %
+num_examples = size(X)(1);
 
-
-
+for i = 1:num_examples
+    min_distance = intmax;
+    curr_centroid = 1;
+    for j = 1:K
+        distance = sum((X(i,:) - centroids(j,:)) .^ 2);
+        if (distance < min_distance)
+            min_distance = distance;
+            curr_centroid = j;
+        endif
+    endfor
+    idx(i) = curr_centroid;
+endfor
 
 
 
